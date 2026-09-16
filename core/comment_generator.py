@@ -35,5 +35,4 @@ Java code:
         temperature=0.2
     )
 
-    # FIXED: correct access pattern
     return response.choices[0].message.content
