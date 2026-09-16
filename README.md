@@ -1,132 +1,49 @@
-# Java Comment Generator
+# Java Comment Generator 💬
 
-## Overview
+A small Streamlit app we built for our 3rd semester mini project, that takes Java code and adds meaningful comments to it automatically, using an LLM through the Groq API.
 
-The Java Comment Generator is a Python-based academic project developed to automatically generate meaningful comments for Java source code. The project uses a Large Language Model (LLM) accessed through the Groq API and provides a simple web interface using Streamlit.
+The idea came from a pretty common problem: code without comments is annoying to read later, but writing comments by hand is hard and most will skip. This tool does the boring part for you — you upload or paste a `.java` file, hit generate, and get back the same code with explanations added, plus a quick breakdown of how many classes/methods it found.
 
-This project focuses on **AI-assisted software documentation** and is intended for learning and academic purposes.
+## What it does
 
----
+- Takes Java code as a file upload or pasted text
+- Sends it to Llama 3.3 (via Groq) with a prompt that says "add comments only, don't touch the logic"
+- Merges the generated comments back into the code
+- Shows a simple analysis (line count, number of classes/methods) alongside the result
+- Lets you download the commented file or save it locally
 
-## Problem Definition
+It's intentionally narrow in scope — it doesn't try to refactor, optimize, or translate the code, just document it.
 
-In many software projects, source code lacks proper comments due to time constraints or oversight. Poorly documented code is difficult to understand, maintain, and extend. Writing comments manually is repetitive and time-consuming.
+## Project structure
 
-This project addresses the problem by using an AI model to automatically generate descriptive comments for Java programs.
+app.py # Streamlit app - the UI
+core/
+comment_generator.py # calls the Groq API to generate comments
+inserter.py # merges generated comments back into the original code
+analyzer.py # basic structural stats (classes, methods, line count)
+utils.py # file load/save helpers
+.env # holds GROQ_API_KEY (not committed with a real key)
+requirements.txt
 
----
+## Running it locally
 
-## Project Objectives
+1. Install the dependencies:
+   pip install -r requirements.txt
+   
+2. Grab a free API key from [Groq](https://console.groq.com) and drop it in a `.env` file:
+   GROQ_API_KEY=your_api_key_here
+   
+4. Start the app:
+   streamlit run app.py
 
-* To design a tool that automatically generates comments for Java code
-* To reduce manual effort in software documentation
-* To improve code readability and maintainability
-* To demonstrate the application of Large Language Models in software engineering
+## Notes / limitations
 
----
+- Comment quality depends on the model's response, so results aren't perfect every time
+- Needs an internet connection since it's calling an external API
+- Larger files can be slower or occasionally get truncated by the model
 
-## Scope of the Project
+## Why this exists
 
-* Accepts Java source code as input
-* Generates meaningful comments for classes, methods, and logic blocks
-* Displays the commented code through a web interface
+This was built as an academic project on AI-assisted software documentation — mainly to explore how well an LLM can understand code structure well enough to explain it, and to get hands-on practice wiring a Python backend up to a simple web UI. Sample Java files (`palindrome.java`, `primeOrNot.java`) are included in the repo for testing.
 
-This project does not aim to modify or optimize the original Java logic.
-
----
-
-## Technologies Used
-
-* **Programming Language:** Python 3
-* **Web Framework:** Streamlit
-* **AI Model:** LLaMA (via Groq API)
-* **Environment Management:** python-dotenv
-* **Operating System:** Windows
-
----
-
-## Project Structure
-
-```
-java-comment-generator/
-│
-├── app.py
-├── core/
-│   └── comment_generator.py
-├── .env
-├── requirements.txt
-└── README.md
-```
-
----
-
-## Development Methodology
-
-1. Requirement analysis was carried out to identify the need for automated code documentation.
-2. Python and Streamlit were selected for rapid development and ease of use.
-3. The project was modularized into frontend (UI) and backend (comment generation logic).
-4. The Groq API was integrated to access a Large Language Model for comment generation.
-5. The application was tested with multiple Java source files to validate output accuracy.
-
----
-
-## Installation and Execution
-
-### Step 1: Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### Step 2: Configure API Key
-
-Create a `.env` file in the project root directory and add:
-
-```
-GROQ_API_KEY=your_api_key_here
-```
-
-### Step 3: Run the Application
-
-```bash
-streamlit run app.py
-```
-
----
-
-## Output
-
-The system produces Java source code with clear and meaningful comments while preserving the original program structure and logic.
-
----
-
-## Limitations
-
-* Accuracy depends on the AI model response
-* Requires active internet connection
-* Performance may vary for large source files
-
----
-
-## Future Enhancements
-
-* Support for additional programming languages
-* Offline model integration
-* Export commented code as downloadable files
-* Integration with IDEs
-
----
-
-## Conclusion
-
-This project demonstrates how AI-based language models can be effectively used to automate software documentation. The Java Comment Generator reduces manual effort and improves code understanding, making it useful for students and developers.
-
----
-
-## requirements.txt
-
-```
-streamlit
-python-dotenv
-groq
-```
+Possible next steps if I keep working on this: support for more languages, an offline/local model option, and maybe a VS Code extension instead of a standalone web app.
